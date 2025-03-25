@@ -57,9 +57,6 @@ export const login = async (req, res) => {
 export const createOrUpdateUser = async (req, res) => {
     try {
         const { uid, email, fullname } = req.body;
-        console.log('createOrUpdateUser - UID:', uid, 'Email:', email, 'Fullname:', fullname);  // Debug log
-        
-        // Find user by Firebase UID or create new
         let user = await User.findOne({ uid });
         
         if (!user) {
@@ -69,9 +66,6 @@ export const createOrUpdateUser = async (req, res) => {
                 fullname,
                 cart: []
             });
-            console.log('New user created:', user);  // Debug log
-        } else {
-            console.log('Existing user found:', user);  // Debug log
         }
         
         await user.save();
@@ -85,7 +79,6 @@ export const createOrUpdateUser = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Error in createOrUpdateUser:", error);
         res.status(500).json({ 
             success: false, 
             message: "Error creating/updating user" 
@@ -96,10 +89,8 @@ export const createOrUpdateUser = async (req, res) => {
 export const getUserCart = async (req, res) => {
     try {
         const { uid } = req.params;
-console.log('Looking for user with UID:', uid); // Debug log
         
         const user = await User.findOne({ uid });
-console.log('Found user:', user); // Debug log
         
         if (!user) {
             return res.status(404).json({ 
@@ -124,7 +115,6 @@ console.log('Found user:', user); // Debug log
 export const addToCart = async (req, res) => {
     try {
         const uid = req.user.uid; // Gets UID from the verified token
-        console.log('User ID from token:', uid);  // Debug log
         const { bookId, name, price, image } = req.body;
         
         const user = await User.findOne({ uid });

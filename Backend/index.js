@@ -10,11 +10,10 @@ import { checkFirebaseConnection } from './middleware/authMiddleware.js';
 const app = express()
 
 dotenv.config();
-console.log("MongoDB URI:", process.env.MONGODB_URI); // Debug log
 
 const URI = process.env.MONGODB_URI;
 if (!URI) {
-    console.error("Error: MONGODB_URI is undefined. Make sure your .env is in the backend root.");
+    console.error("Error: MONGODB_URI is undefined");
     process.exit(1);
 }
 

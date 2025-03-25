@@ -3,15 +3,16 @@ import { useState } from "react";
 import Login from "./Login";
 import Logout from "./Logout";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
     const [authUser] = useAuth();
-    console.log(authUser);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+    const [sticky, setSticky] = useState(false);
+    const location = useLocation();
+    const isHomePage = location.pathname === '/';
 
     useEffect(() => {
-        // Add a smooth transition for background-color and text color
         document.documentElement.style.transition = "background-color 0.5s ease, color 0.5s ease";
         if (theme === "dark") {
             document.documentElement.setAttribute("data-theme", "business");
@@ -22,102 +23,68 @@ function Navbar() {
         }
     }, [theme]);
 
-    const [sticky, setSticky] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 0) {
-                setSticky(true);
-            } else {
-                setSticky(false);
-            }
+            setSticky(window.scrollY > 0);
         };
         window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
     const navItems = (
         <>
             <li>
-                <a href="/">Home</a>
+                <a href="/" className={`transition-colors duration-300 ${isHomePage && !sticky ? 'text-white hover:text-gray-200' : ''}`}>Home</a>
             </li>
             <li>
-                <a href="/shop">Shop</a>
+                <a href="/shop" className={`transition-colors duration-300 ${isHomePage && !sticky ? 'text-white hover:text-gray-200' : ''}`}>Shop</a>
             </li>
             <li>
-                <a>Contact</a>
+                <a className={`transition-colors duration-300 ${isHomePage && !sticky ? 'text-white hover:text-gray-200' : ''}`}>Contact</a>
             </li>
             <li>
-                <a>About</a>
+                <a className={`transition-colors duration-300 ${isHomePage && !sticky ? 'text-white hover:text-gray-200' : ''}`}>About</a>
             </li>
         </>
     );
+
     return (
         <>
-            <div
-                className={` max-w-screen-2xl container mx-auto md:px-20 px-4 dark:bg-slate-800 dark:text-white fixed top-0 left-0 right-0 z-50 ${sticky
-                    ? "sticky-navbar shadow-md bg-base-200 dark:bg-slate-700 dark:text-white duration-300 transition-all ease-in-out"
-                    : ""
-                    }`}
-            >
-                <div className="navbar ">
+            <div className={`max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+                ${sticky || !isHomePage ? 'bg-base-200 dark:bg-slate-700 shadow-md' : 'bg-transparent'}`}>
+                <div className="navbar">
                     <div className="navbar-start">
                         <div className="dropdown">
-                            <div
-                                tabIndex={0}
-                                role="button"
-                                className="btn btn-ghost lg:hidden"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h8m-8 6h16"
-                                    />
+                            <div tabIndex={0} role="button" className={`btn btn-ghost lg:hidden ${!sticky ? 'text-white' : ''}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
                                 </svg>
                             </div>
-                            <ul
-                                tabIndex={0}
-                                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                            >
+                            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                                 {navItems}
                             </ul>
                         </div>
-                        <a className=" text-2xl font-bold cursor-pointer">BookNest</a>
+                        <a className={`text-2xl font-bold cursor-pointer transition-colors duration-300 ${isHomePage && !sticky ? 'text-white' : ''}`}>BookNest</a>
                     </div>
                     <div className="navbar-end space-x-3">
                         <div className="navbar-center hidden lg:flex">
                             <ul className="menu menu-horizontal px-1">{navItems}</ul>
                         </div>
                         <div className="hidden md:block">
-                            <label className=" px-3 py-2 border rounded-md flex items-center gap-2">
+                            <label className={`px-3 py-2 border rounded-md flex items-center gap-2 transition-colors duration-300 
+                                ${isHomePage && !sticky ? 'border-white/20 text-white' : ''}`}>
                                 <input
                                     type="text"
-                                    className="grow outline-none rounded-md px-1 dark:bg-slate-900 dark:text-white"
+                                    className={`grow outline-none rounded-md px-1 transition-colors duration-300 
+                                        ${isHomePage && !sticky ? 'bg-transparent placeholder-white/70' : 'dark:bg-slate-900 dark:text-white'}`}
                                     placeholder="Search"
                                 />
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 16 16"
-                                    fill="currentColor"
-                                    className="w-4 h-4 opacity-70"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                                        clipRule="evenodd"
-                                    />
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
+                                    <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
                                 </svg>
                             </label>
                         </div>
-                        <label className="swap swap-rotate">
+                        <label className={`swap swap-rotate transition-colors duration-300 ${isHomePage && !sticky ? 'text-white' : ''}`}>
                             <input
                                 type="checkbox"
                                 className="theme-controller"
@@ -139,26 +106,20 @@ function Navbar() {
                                 <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Z" />
                             </svg>
                         </label>
-
-
-                        <Link to="/cart" className="btn btn-ghost btn-circle">
+                        <Link to="/cart" className={`btn btn-ghost btn-circle transition-colors duration-300 ${isHomePage && !sticky ? 'text-white' : ''}`}>
                             <div className="indicator">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                             </div>
                         </Link>
-
                         {authUser ? (
                             <Logout />
                         ) : (
-                            <div className="">
-                                <a
-                                    className="bg-gray-800 text-white px-3 py-2 rounded-md hover:bg-gray-700 duration-300 cursor-pointer"
-                                    onClick={() =>
-                                        document.getElementById("my_modal_3").showModal()
-                                    }
-                                >
+                            <div>
+                                <a className={`px-3 py-2 rounded-md duration-300 cursor-pointer
+                                    ${isHomePage && !sticky ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
+                                    onClick={() => document.getElementById("my_modal_3").showModal()}>
                                     Login
                                 </a>
                                 <Login />

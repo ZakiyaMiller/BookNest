@@ -28,46 +28,46 @@ function Freebook() {
         dots: true,
         infinite: false,
         speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToShow: 4,
+        slidesToScroll: 4,
         initialSlide: 0,
+        className: "book-slider",
+        centerMode: false,
+        centerPadding: "0px",
         responsive: [
             {
-                breakpoint: 1024,
+                breakpoint: 1280,
                 settings: {
                     slidesToShow: 3,
                     slidesToScroll: 3,
-                    infinite: true,
-                    dots: true,
-                },
+                }
             },
             {
-                breakpoint: 600,
+                breakpoint: 768,
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 2,
-                    initialSlide: 2,
-                },
+                }
             },
             {
-                breakpoint: 480,
+                breakpoint: 640,
                 settings: {
                     slidesToShow: 1,
                     slidesToScroll: 1,
-                },
-            },
-        ],
+                }
+            }
+        ]
     };
+
     return (
         <>
-            <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4">
-                <div>
-                    <h1 className="font-semibold text-xl pb-2">Trending Now</h1>
-                    <p>Find Your Next Great Read Today!
-                    </p>
+            <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 my-16">
+                <div className="mb-8">
+                    <h1 className="font-semibold text-2xl">Trending Now</h1>
+                    <p className="text-gray-600 dark:text-gray-400">Find Your Next Great Read Today!</p>
                 </div>
 
-                <div>
+                <div className="h-[450px]">
                     <Slider {...settings}>
                         {book.map((item) => (
                             <Cards item={item} key={item.id} />
